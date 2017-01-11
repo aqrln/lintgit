@@ -2,7 +2,7 @@
   "name": "lintgit",
   "version": "0.1.0",
   "description": "Totalitarian Git commit messages linter",
-  "main": "lintgit.js",
+  "main": "./lintgit.js",
   "scripts": {
     "test": "eslint ."
   },
