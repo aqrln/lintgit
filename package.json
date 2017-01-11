@@ -24,5 +24,8 @@
   "homepage": "https://github.com/aqrln/lintgit#readme",
   "devDependencies": {
     "eslint": "^3.13.1"
+  },
+  "dependencies": {
+    "pos": "^0.4.2"
   }
 }
