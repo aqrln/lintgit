@@ -1,0 +1,28 @@
+{
+  "name": "lintgit",
+  "version": "0.1.0",
+  "description": "Totalitarian Git commit messages linter",
+  "main": "lintgit.js",
+  "scripts": {
+    "test": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aqrln/lintgit.git"
+  },
+  "keywords": [
+    "git",
+    "commit",
+    "lint",
+    "linter"
+  ],
+  "author": "Alexey Orlenko <eaglexrlnk@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aqrln/lintgit/issues"
+  },
+  "homepage": "https://github.com/aqrln/lintgit#readme",
+  "devDependencies": {
+    "eslint": "^3.13.1"
+  }
+}
