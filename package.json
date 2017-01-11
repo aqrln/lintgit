@@ -4,7 +4,8 @@
   "description": "Totalitarian Git commit messages linter",
   "main": "./lintgit.js",
   "scripts": {
-    "test": "eslint ."
+    "test": "node ./test/run && eslint .",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
