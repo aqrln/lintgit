@@ -8,6 +8,14 @@ const stat = promisify(fs.stat);
 
 const tests = [];
 
+loadFiles(__dirname).then(() => {
+  console.log(`Loaded ${tests.length} test(s)`);
+  process.nextTick(runTests);
+}).catch((err) => {
+  console.error('' + err);
+  process.exit(1);
+});
+
 function runTests() {
   if (tests.length === 0) {
     console.log('OK');
@@ -18,14 +26,6 @@ function runTests() {
   test.fn();
   process.nextTick(runTests);
 }
-
-loadFiles(__dirname).then(() => {
-  console.log(`Loaded ${tests.length} test(s)`);
-  process.nextTick(runTests);
-}).catch((err) => {
-  console.error('' + err);
-  process.exit(1);
-});
 
 function loadFiles(dir) {
   return readdir(dir).then((filenames) =>
