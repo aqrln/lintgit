@@ -3,35 +3,8 @@
 const fs = require('fs');
 const path = require('path');
 
-function promisify(fn) {
-  return (...args) => (
-    new Promise((resolve, reject) => {
-      fn(...args, (err, ...results) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(...results);
-        }
-      });
-    })
-  );
-}
-
 const readdir = promisify(fs.readdir);
 const stat = promisify(fs.stat);
-
-function doPromise(generator) {
-  const sequence = generator();
-  return step();
-
-  function step(value) {
-    const result = sequence.next(value);
-    if (result.done) {
-      return result.value;
-    }
-    return result.value.then(step);
-  }
-}
 
 const tests = [];
 
@@ -50,22 +23,25 @@ loadFiles(__dirname).then(() => {
   console.log(`Loaded ${tests.length} test(s)`);
   process.nextTick(runTests);
 }).catch((err) => {
-  throw err;
+  console.error('' + err);
+  process.exit(1);
 });
 
 function loadFiles(dir) {
-  return doPromise(function*() {
-    const filenames = yield readdir(dir);
-    for (const fname of filenames) {
-      const fullName = path.join(dir, fname);
-      const stats = yield stat(fullName);
-      if (stats.isDirectory()) {
-        yield loadFiles(fullName);
-      } else if (stats.isFile() && fname.endsWith('.test.js')) {
-        loadTests(fullName);
+  return readdir(dir).then((filenames) =>
+    Promise.all(filenames.map((filename) => {
+      const name = path.join(dir, filename);
+      return stat(name).then(stats => ({ name, stats }));
+    }))
+  ).then((files) =>
+    Promise.all(files.map((file) => {
+      if (file.stats.isDirectory()) {
+        return loadFiles(file.name);
+      } else if (file.stats.isFile() && file.name.endsWith('.test.js')) {
+        return loadTests(file.name);
       }
-    }
-  });
+    }))
+  );
 }
 
 function loadTests(filename) {
@@ -79,4 +55,18 @@ function loadTests(filename) {
       tests.push({ name: key, moduleName, fn: value });
     }
   });
+}
+
+function promisify(fn) {
+  return (...args) => (
+    new Promise((resolve, reject) => {
+      fn(...args, (err, ...results) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(...results);
+        }
+      });
+    })
+  );
 }
