@@ -7,9 +7,11 @@ const readdir = promisify(fs.readdir);
 const stat = promisify(fs.stat);
 
 const tests = [];
+let currentTest = 0;
+let prevModuleName = '';
 
 loadFiles(__dirname).then(() => {
-  console.log(`Loaded ${tests.length} test(s)`);
+  console.log(`1..${tests.length}`);
   process.nextTick(runTests);
 }).catch((err) => {
   console.error('' + err);
@@ -17,13 +19,26 @@ loadFiles(__dirname).then(() => {
 });
 
 function runTests() {
-  if (tests.length === 0) {
-    console.log('OK');
+  if (currentTest >= tests.length) {
     return;
   }
-  const test = tests.shift();
-  console.log(`# ${test.moduleName}/${test.name}`);
-  test.fn();
+
+  const test = tests[currentTest++];
+  const outputLine = ` ${currentTest} - ${test.moduleName}/${test.name}`;
+
+  if (test.moduleName !== prevModuleName) {
+    console.log('# ' + test.moduleName);
+    prevModuleName = test.moduleName;
+  }
+
+  try {
+    test.fn();
+    console.log('ok' + outputLine);
+  } catch (err) {
+    console.log('not ok' + outputLine);
+    console.error('' + err, err.stack);
+  }
+
   process.nextTick(runTests);
 }
 

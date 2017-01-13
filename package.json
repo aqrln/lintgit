@@ -4,7 +4,7 @@
   "description": "Totalitarian Git commit messages linter",
   "main": "./lintgit.js",
   "scripts": {
-    "test": "node ./test/run && eslint .",
+    "test": "node ./test/run | tap-summary && eslint .",
     "lint": "eslint ."
   },
   "repository": {
@@ -24,7 +24,8 @@
   },
   "homepage": "https://github.com/aqrln/lintgit#readme",
   "devDependencies": {
-    "eslint": "^3.13.1"
+    "eslint": "^3.13.1",
+    "tap-summary": "^3.0.1"
   },
   "dependencies": {
     "pos": "^0.4.2"
