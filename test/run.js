@@ -29,17 +29,15 @@ loadFiles(__dirname).then(() => {
 
 function loadFiles(dir) {
   return readdir(dir).then((filenames) =>
-    Promise.all(filenames.map((filename) => {
-      const name = path.join(dir, filename);
-      return stat(name).then(stats => ({ name, stats }));
-    }))
-  ).then((files) =>
-    Promise.all(files.map((file) => {
-      if (file.stats.isDirectory()) {
-        return loadFiles(file.name);
-      } else if (file.stats.isFile() && file.name.endsWith('.test.js')) {
-        return loadTests(file.name);
-      }
+    Promise.all(filenames.map((name) => {
+      const fullName = path.join(dir, name);
+      return stat(fullName).then((stats) => {
+        if (stats.isDirectory()) {
+          return loadFiles(fullName);
+        } else if (stats.isFile() && fullName.endsWith('.test.js')) {
+          return loadTests(fullName);
+        }
+      });
     }))
   );
 }
