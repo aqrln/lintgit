@@ -1,7 +1,7 @@
 {
   "name": "lintgit",
-  "version": "0.1.0",
-  "description": "Totalitarian Git commit messages linter",
+  "version": "0.1.1",
+  "description": "Git commit messages linter (unmaintaned)",
   "main": "./lintgit.js",
   "scripts": {
     "test": "node ./test/run | tap-summary && eslint .",
